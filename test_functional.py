@@ -2,11 +2,36 @@
 Functional Tests for Feedback Analysis Toolkit
 """
 
+from unittest.mock import patch
+import io
+
 from project import (
+    main,
     load_feedback_data,
     calculate_response_metrics,
     analyse_content_themes,
 )
+
+
+def test_user_can_run_full_analysis_workflow():
+    """
+    Sarah wants to run a complete analysis of her feedback data.
+    She runs the main program, which:
+    - Loads the data
+    - Calculates metrics
+    - Analyses content themes
+    - Displays the results
+    """
+
+    # Simulate user input (filename)
+    with patch("builtins.input", return_value="test_data.csv"):
+        # Capture printed output
+        with patch("sys.stdout", new=io.StringIO()) as fake_output:
+            main()
+            output = fake_output.getvalue()
+
+            # Check that some analysis results were printed
+            assert len(output) > 0
 
 
 def test_user_can_load_and_analyse_feedback_data():
