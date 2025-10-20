@@ -1,3 +1,15 @@
+"""
+Unit tests for the Response Analysis Toolkit
+"""
+
+"""
+AI Assistance Note:
+This module was developed using AI tools (Claude, VS Code AI) for:
+- Initial test case generation following TDD patterns
+- Debugging and interpreting test failures
+All architecture and design decisions and final implementations are my own work.
+"""
+
 from project import get_sentiment_descriptors
 
 

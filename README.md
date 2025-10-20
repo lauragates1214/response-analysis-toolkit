@@ -73,3 +73,7 @@ The toolkit expects CSV files with the following columns:
 Run the test suite with: `pytest`
 
 All tests should pass, demonstrating that the toolkit correctly loads data, calculates metrics, analyses sentiment, and provides appropriate descriptive labels across all sentiment ranges.
+
+## AI Assistance
+
+I used AI tools throughout this project whilst maintaining ownership of all design decisions and core implementations. Claude served multiple roles: writing initial test cases following TDD patterns, helping interpret test failure output, explaining Django and htmx concepts, and debugging configuration issues. During the code integration phases of the TDD cycle, I instructed Claude to act as a tutor rather than writing code directly - guiding me through implementations step-by-step. I modelled this approach on CS50's duck debugger system prompt, introduced to me at a CS50 Hackathon in London in June 2025. Additionally, I used VS Code's integrated AI for code completions. All architectural decisions, feature designs, and final code implementations were my own work, with AI serving as an educational amplifier rather than a replacement for learning.
