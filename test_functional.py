@@ -51,3 +51,27 @@ def test_user_can_calculate_basic_response_metrics():
     assert metrics is not None
     assert "total_responses" in metrics
     assert metrics["total_responses"] == 3
+
+
+def test_user_can_analyze_content_themes():
+    """
+    Sarah has loaded her feedback data and calculated basic metrics.
+    Now she wants to understand the themes and sentiment in the text responses.
+
+    She runs content analysis which tells her:
+    - Overall sentiment (positive/negative/neutral)
+    - Common words or themes
+    - Any other text-based insights
+    """
+    from project import load_feedback_data, analyze_content_themes
+
+    # Sarah loads her data
+    data = load_feedback_data("test_data.csv")
+
+    # She analyzes the content themes
+    themes = analyze_content_themes(data)
+
+    # She can see some analysis was performed
+    assert themes is not None
+    assert isinstance(themes, dict)
+    assert "sentiment" in themes
