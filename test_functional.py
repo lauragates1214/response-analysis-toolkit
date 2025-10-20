@@ -13,94 +13,37 @@ from project import (
 )
 
 
-def test_user_can_run_full_analysis_workflow():
+def test_complete_user_workflow():
     """
-    Sarah wants to run a complete analysis of her feedback data.
-    She runs the main program, which:
-    - Loads the data
-    - Calculates metrics
-    - Analyses content themes
-    - Displays the results
+    Sarah is a course coordinator who has collected feedback from students.
+    She has exported the responses as 'test_data.csv' and wants to analyse it.
+
+    She runs the Response Analysis Toolkit from her terminal.
+    The program asks her for the CSV filename.
+    She types 'test_data.csv' and presses enter.
+
+    The program processes her data and displays:
+    - The total number of responses she received
+    - The overall sentiment (how positive the feedback was), with descriptive text
+    - How subjective vs objective the responses were, with descriptive text
+
+    She can now see meaningful insights from her feedback data.
     """
 
-    # Simulate user input (filename)
+    # Sarah runs the program and enters her filename
     with patch("builtins.input", return_value="test_data.csv"):
-        # Capture printed output
         with patch("sys.stdout", new=io.StringIO()) as fake_output:
             main()
             output = fake_output.getvalue()
 
-            # Check that some analysis results were printed
-            assert len(output) > 0
+            # She sees the analysis results displayed
+            assert "Analysis Results" in output
+            assert "Total Responses: 3" in output
+            assert "Sentiment Polarity" in output
+            assert "Sentiment Subjectivity" in output
 
-
-def test_user_can_load_and_analyse_feedback_data():
-    """
-    Sarah is a course coordinator who has exported feedback responses
-    from her survey platform as a CSV file. She wants to analyse the data.
-
-    She runs the feedback analysis toolkit and loads her CSV file.
-    The program successfully reads the file and shows her some basic
-    statistics about the responses.
-    """
-    # Sarah has a CSV file with feedback data
-    from project import load_feedback_data
-
-    test_file = "test_data.csv"
-
-    # She loads the file using the toolkit
-    # This should not crash
-    data = load_feedback_data(test_file)
-
-    # She can see that data was loaded successfully
-    assert data is not None
-
-    # She can see how many responses were collected
-    assert len(data) > 0
-
-
-def test_user_can_calculate_basic_response_metrics():
-    """
-    Sarah has loaded her feedback data and now wants to see
-    some basic statistics about the responses.
-
-    She calculates response metrics which tells her:
-    - Total number of responses
-    - Response rate (if applicable)
-    - Any other useful statistics
-    """
-
-    # Sarah loads her data
-    data = load_feedback_data("test_data.csv")
-
-    # She calculates basic metrics
-    metrics = calculate_response_metrics(data)
-
-    # She can see the total number of responses
-    assert metrics is not None
-    assert "total_responses" in metrics
-    assert metrics["total_responses"] == 3
-
-
-def test_user_can_analyse_content_themes():
-    """
-    Sarah has loaded her feedback data and calculated basic metrics.
-    Now she wants to understand the themes and sentiment in the text responses.
-
-    She runs content analysis which tells her:
-    - Overall sentiment (positive/negative/neutral)
-    - Common words or themes
-    - Any other text-based insights
-    """
-
-    # Sarah loads her data
-    data = load_feedback_data("test_data.csv")
-
-    # She analyses the content themes
-    themes = analyse_content_themes(data)
-
-    # She can see analysis was performed on sentiment and subjectivity
-    assert themes is not None
-    assert isinstance(themes, dict)
-    assert "sentiment_polarity" in themes
-    assert "sentiment_subjectivity" in themes
+            # The sentiment scores are visible
+            assert "0.7" in output  # Approximate polarity score
+            assert "0.9" in output  # Approximate subjectivity score
+            assert "Positive" in output  # Descriptive text for polarity
+            assert "Subjective" in output  # Descriptive text for subjectivity

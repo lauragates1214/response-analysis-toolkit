@@ -14,6 +14,11 @@ def test_load_feedback_data_returns_data():
     assert data is not None
 
 
+def test_load_feedback_data_has_rows():
+    data = load_feedback_data("test_data.csv")
+    assert len(data) > 0
+
+
 def test_calculate_response_metrics_returns_dict():
     data = load_feedback_data("test_data.csv")
     metrics = calculate_response_metrics(data)
