@@ -2,7 +2,11 @@
 Unit tests for the Response Analysis Toolkit
 """
 
-from project import load_feedback_data, calculate_response_metrics
+from project import (
+    load_feedback_data,
+    calculate_response_metrics,
+    analyse_content_themes,
+)
 
 
 def test_load_feedback_data_returns_data():
@@ -23,3 +27,40 @@ def test_calculate_response_metrics_counts_correctly():
     metrics = calculate_response_metrics(data)
 
     assert metrics["total_responses"] == 3
+
+
+def test_analyse_content_themes_returns_dict():
+    data = load_feedback_data("test_data.csv")
+    themes = analyse_content_themes(data)
+
+    assert isinstance(themes, dict)
+
+
+def test_analyse_content_themes_sentiment_polarity_exists():
+    data = load_feedback_data("test_data.csv")
+    themes = analyse_content_themes(data)
+
+    assert "sentiment_polarity" in themes
+    assert themes["sentiment_polarity"] is not None
+
+
+def test_analyse_content_themes_sentiment_polarity_is_numeric():
+    data = load_feedback_data("test_data.csv")
+    themes = analyse_content_themes(data)
+
+    assert isinstance(themes["sentiment_polarity"], (int, float))
+
+
+def test_analyse_content_themes_sentiment_subjectivity_exists():
+    data = load_feedback_data("test_data.csv")
+    themes = analyse_content_themes(data)
+
+    assert "sentiment_subjectivity" in themes
+    assert themes["sentiment_subjectivity"] is not None
+
+
+def test_analyse_content_themes_sentiment_subjectivity_is_numeric():
+    data = load_feedback_data("test_data.csv")
+    themes = analyse_content_themes(data)
+
+    assert isinstance(themes["sentiment_subjectivity"], (int, float))

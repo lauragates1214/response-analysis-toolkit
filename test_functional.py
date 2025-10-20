@@ -2,10 +2,14 @@
 Functional Tests for Feedback Analysis Toolkit
 """
 
-from project import load_feedback_data, calculate_response_metrics
+from project import (
+    load_feedback_data,
+    calculate_response_metrics,
+    analyse_content_themes,
+)
 
 
-def test_user_can_load_and_analyze_feedback_data():
+def test_user_can_load_and_analyse_feedback_data():
     """
     Sarah is a course coordinator who has exported feedback responses
     from her survey platform as a CSV file. She wants to analyse the data.
@@ -53,7 +57,7 @@ def test_user_can_calculate_basic_response_metrics():
     assert metrics["total_responses"] == 3
 
 
-def test_user_can_analyze_content_themes():
+def test_user_can_analyse_content_themes():
     """
     Sarah has loaded her feedback data and calculated basic metrics.
     Now she wants to understand the themes and sentiment in the text responses.
@@ -63,15 +67,15 @@ def test_user_can_analyze_content_themes():
     - Common words or themes
     - Any other text-based insights
     """
-    from project import load_feedback_data, analyze_content_themes
 
     # Sarah loads her data
     data = load_feedback_data("test_data.csv")
 
-    # She analyzes the content themes
-    themes = analyze_content_themes(data)
+    # She analyses the content themes
+    themes = analyse_content_themes(data)
 
-    # She can see some analysis was performed
+    # She can see analysis was performed on sentiment and subjectivity
     assert themes is not None
     assert isinstance(themes, dict)
-    assert "sentiment" in themes
+    assert "sentiment_polarity" in themes
+    assert "sentiment_subjectivity" in themes
