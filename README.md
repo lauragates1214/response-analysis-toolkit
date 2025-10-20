@@ -1,5 +1,5 @@
-A Python application for analysing survey and feedback data, built using Test-Driven Development principles. Processes CSV exports to generate statistical insights, sentiment analysis and reporting on response patterns.
-Core functionality later integrated into a Django-based feedback platform for real-time organisational insights.
+A Python application for analysing survey data, built using Test-Driven Development principles. Processes CSV exports to generate statistical insights, sentiment analysis and reporting on response patterns.
+Core functionality later integrated into a Django-based educational survey platform.
 
 Key Features:
 
