@@ -1,8 +1,9 @@
 """
 AI Assistance Note:
-This module was developed using AI tools (Claude, VS Code AI) for:
+This module was developed using AI tools (Claude, GitHub Copilot) for:
 - Initial test case generation following TDD patterns
 - Debugging and interpreting test failures
+- Writing the initial draft of the get_visualisation function
 All architecture and design decisions and final implementations are my own work.
 """
 
@@ -109,7 +110,7 @@ def analyse_word_frequency(data):
     return {"top_words": most_common}
 
 
-# AI-assisted (Claude)
+# AI-assisted - initial draft of function written by Claude
 def generate_visualisation(metrics, themes, descriptors, filename):
     """Generate a bar chart visualisation of sentiment analysis results"""
     # Create data for the chart (only sentiment metrics)
