@@ -7,6 +7,7 @@ All architecture and design decisions and final implementations are my own work.
 """
 
 from collections import Counter
+import matplotlib.pyplot as plt
 import pandas as pd
 from textblob import TextBlob
 
@@ -14,30 +15,34 @@ from textblob import TextBlob
 def main():
     filename = input("Please enter the survey data CSV filename: ")
     data = load_feedback_data(filename)
-    total = calculate_total_responses(data)
-    sentiment = analyse_sentiment(data)
+    metrics = calculate_total_responses(data)
+    themes = analyse_sentiment(data)
     descriptors = get_sentiment_descriptors(
-        sentiment["sentiment_polarity"], sentiment["sentiment_subjectivity"]
+        themes["sentiment_polarity"], themes["sentiment_subjectivity"]
     )
     lengths = analyse_response_lengths(data)
     most_common = analyse_word_frequency(data)
 
     print("Analysis Results:")
-    print("Total Responses:", total["total_responses"])
+    print("Total Responses:", metrics["total_responses"])
     print(
         "Sentiment Polarity:",
         descriptors["polarity_descriptor"],
-        "(" + str(sentiment["sentiment_polarity"]) + ")",
+        "(" + str(themes["sentiment_polarity"]) + ")",
     )
     print(
         "Sentiment Subjectivity:",
         descriptors["subjectivity_descriptor"],
-        "(" + str(sentiment["sentiment_subjectivity"]) + ")",
+        "(" + str(themes["sentiment_subjectivity"]) + ")",
     )
     print("Average Response Length:", lengths["average_length"])
     print("Shortest Response:", lengths["min_length"])
     print("Longest Response:", lengths["max_length"])
     print("Most Common Words:", most_common)
+
+    # Generate visualisation
+    generate_visualisation(metrics, themes, descriptors, "analysis_chart.png")
+    print("\nVisualisation saved to analysis_chart.png")
 
 
 def load_feedback_data(filename):
@@ -102,6 +107,42 @@ def analyse_word_frequency(data):
     word_counts = Counter(words)
     most_common = word_counts.most_common(10)  # get top 10
     return {"top_words": most_common}
+
+
+# AI-assisted (Claude)
+def generate_visualisation(metrics, themes, descriptors, filename):
+    """Generate a bar chart visualisation of sentiment analysis results"""
+    # Create data for the chart (only sentiment metrics)
+    categories = ["Sentiment Polarity", "Sentiment Subjectivity"]
+    values = [themes["sentiment_polarity"], themes["sentiment_subjectivity"]]
+
+    # Create the bar chart
+    plt.figure(figsize=(10, 6))
+    plt.bar(categories, values, color=["green", "orange"])
+    plt.title("Sentiment Analysis Results")
+    plt.ylabel("Score (0-1)")
+    plt.xlabel("Themes")
+    plt.ylim(0, 1)  # Set y-axis range from 0 to 1
+
+    # Add value labels with descriptors on top of bars
+    plt.text(
+        0,
+        values[0],
+        f'{values[0]:.2f}\n({descriptors["polarity_descriptor"]})',
+        ha="center",
+        va="bottom",
+    )
+    plt.text(
+        1,
+        values[1],
+        f'{values[1]:.2f}\n({descriptors["subjectivity_descriptor"]})',
+        ha="center",
+        va="bottom",
+    )
+
+    # Save to file
+    plt.savefig(filename)
+    plt.close()
 
 
 if __name__ == "__main__":

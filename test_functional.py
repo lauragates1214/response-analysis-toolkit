@@ -11,6 +11,7 @@ All architecture and design decisions and final implementations are my own work.
 """
 
 import io
+import os
 import pytest
 from unittest.mock import patch
 
@@ -103,3 +104,21 @@ def test_displays_word_frequency_analysis(run_analysis):
     assert "Most Common Words" in output
     # Common words from test data should appear
     assert "satisfied" in output.lower() or "course" in output.lower()
+
+
+def test_generates_visualisation(run_analysis):
+    """
+    Aya wants a visual chart of her analysis results
+    that she can include in reports.
+    """
+    # Remove any existing chart
+    if os.path.exists("analysis_chart.png"):
+        os.remove("analysis_chart.png")
+
+    output = run_analysis()
+
+    # Chart should be created
+    assert os.path.exists("analysis_chart.png")
+
+    # Cleanup
+    os.remove("analysis_chart.png")

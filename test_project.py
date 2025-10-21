@@ -10,6 +10,8 @@ This module was developed using AI tools (Claude, VS Code AI) for:
 All architecture and design decisions and final implementations are my own work.
 """
 
+import os
+
 from project import (
     load_feedback_data,
     calculate_total_responses,
@@ -17,6 +19,7 @@ from project import (
     get_sentiment_descriptors,
     analyse_response_lengths,
     analyse_word_frequency,
+    generate_visualisation,
 )
 
 
@@ -221,3 +224,25 @@ def test_analyse_word_frequency_finds_actual_words():
     assert any(
         word in ["satisfied", "great", "course"] for word in [w.lower() for w in words]
     )
+
+
+### Visualisation tests ###
+def test_generate_visualisation_creates_file():
+    # Clean up any existing file
+    if os.path.exists("test_chart.png"):
+        os.remove("test_chart.png")
+
+    data = load_feedback_data("test_data.csv")
+    metrics = calculate_total_responses(data)
+    themes = analyse_sentiment(data)
+    polarity = themes["sentiment_polarity"]
+    subjectivity = themes["sentiment_subjectivity"]
+    descriptors = get_sentiment_descriptors(polarity, subjectivity)
+
+    generate_visualisation(metrics, themes, descriptors, "test_chart.png")
+
+    # File should be created
+    assert os.path.exists("test_chart.png")
+
+    # Cleanup
+    os.remove("test_chart.png")
