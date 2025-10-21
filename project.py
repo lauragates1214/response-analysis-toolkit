@@ -77,5 +77,17 @@ def get_sentiment_descriptors(polarity, subjectivity):
     }
 
 
+def analyse_response_lengths(data):
+    lengths = data["response"].astype(str).apply(len)
+    average_length = sum(lengths) / len(lengths)
+    min_length = min(lengths)
+    max_length = max(lengths)
+    return {
+        "average_length": average_length,
+        "min_length": min_length,
+        "max_length": max_length,
+    }
+
+
 if __name__ == "__main__":
     main()

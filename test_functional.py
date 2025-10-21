@@ -34,6 +34,7 @@ def test_complete_user_workflow():
     - The total number of responses she received
     - The overall sentiment (how positive the feedback was), with descriptive text
     - How subjective vs objective the responses were, with descriptive text
+    - Response length statistics (average, min, max)
 
     She can now see meaningful insights from her feedback data.
     """
@@ -55,3 +56,8 @@ def test_complete_user_workflow():
             assert "0.9" in output  # Approximate subjectivity score
             assert "Positive" in output  # Descriptive text for polarity
             assert "Subjective" in output  # Descriptive text for subjectivity
+
+            # She sees response length analysis
+            assert "Average Response Length" in output
+            assert "Shortest Response" in output
+            assert "Longest Response" in output
