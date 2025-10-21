@@ -6,6 +6,7 @@ This module was developed using AI tools (Claude, VS Code AI) for:
 All architecture and design decisions and final implementations are my own work.
 """
 
+from collections import Counter
 import pandas as pd
 from textblob import TextBlob
 
@@ -19,6 +20,7 @@ def main():
         sentiment["sentiment_polarity"], sentiment["sentiment_subjectivity"]
     )
     lengths = analyse_response_lengths(data)
+    most_common = analyse_word_frequency(data)
 
     print("Analysis Results:")
     print("Total Responses:", total["total_responses"])
@@ -35,6 +37,7 @@ def main():
     print("Average Response Length:", lengths["average_length"])
     print("Shortest Response:", lengths["min_length"])
     print("Longest Response:", lengths["max_length"])
+    print("Most Common Words:", most_common)
 
 
 def load_feedback_data(filename):
@@ -91,6 +94,14 @@ def analyse_response_lengths(data):
         "min_length": min_length,
         "max_length": max_length,
     }
+
+
+def analyse_word_frequency(data):
+    text = " ".join(data["response"].astype(str))
+    words = text.split()
+    word_counts = Counter(words)
+    most_common = word_counts.most_common(10)  # get top 10
+    return {"top_words": most_common}
 
 
 if __name__ == "__main__":

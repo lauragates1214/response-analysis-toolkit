@@ -38,7 +38,7 @@ def run_analysis():
 """
 Aya, a course instructor who has collected student feedback, runs the program
 and enters her filename.
-The program processes her data and returns analysis results:
+The program processes her data and returns analysis results.
 She can now see meaningful insights from her feedback data.
 """
 
@@ -52,7 +52,9 @@ def test_analysis_results_printed(run_analysis):
 
 
 def test_total_responses_printed(run_analysis):
-    # Aya runs the program and enters her filename
+    """
+    Aya wants to see how many students responded to the survey.
+    """
     output = run_analysis()
 
     # She sees total responses
@@ -60,7 +62,9 @@ def test_total_responses_printed(run_analysis):
 
 
 def test_sentiment_analysis_printed(run_analysis):
-    # Aya runs the program and enters her filename
+    """
+    Aya wants to see an sentiment analysis to gauge course satisfaction.
+    """
     output = run_analysis()
 
     # She sees the sentiment analysis
@@ -77,10 +81,25 @@ def test_sentiment_analysis_printed(run_analysis):
 
 
 def test_response_length_analysis_printed(run_analysis):
-    # Aya runs the program and enters her filename
+    """
+    Aya wants to see an analysis of length of responses to assess engagement.
+    """
     output = run_analysis()
 
     # She sees the response length analysis
     assert "Average Response Length" in output
     assert "Shortest Response" in output
     assert "Longest Response" in output
+
+
+def test_displays_word_frequency_analysis(run_analysis):
+    """
+    Aya wants to see which words appear most frequently in responses
+    to identify common themes.
+    """
+    output = run_analysis()
+
+    # She sees word frequency analysis
+    assert "Most Common Words" in output
+    # Common words from test data should appear
+    assert "satisfied" in output.lower() or "course" in output.lower()

@@ -16,6 +16,7 @@ from project import (
     analyse_sentiment,
     get_sentiment_descriptors,
     analyse_response_lengths,
+    analyse_word_frequency,
 )
 
 
@@ -179,3 +180,44 @@ def test_analyse_response_lengths_correct_max():
 
     # Longest is "Very satisfied" (14 characters)
     assert length_analysis["max_length"] == 14
+
+
+### Analyse word frequency tests ###
+def test_analyse_word_frequency_returns_dict():
+    data = load_feedback_data("test_data.csv")
+    word_freq = analyse_word_frequency(data)
+
+    assert isinstance(word_freq, dict)
+    assert "top_words" in word_freq
+
+
+def test_analyse_word_frequency_returns_list_of_tuples():
+    data = load_feedback_data("test_data.csv")
+    word_freq = analyse_word_frequency(data)
+
+    assert isinstance(word_freq["top_words"], list)
+    # Each item should be a tuple of (word, count)
+    if len(word_freq["top_words"]) > 0:
+        assert isinstance(word_freq["top_words"][0], tuple)
+
+
+def test_analyse_word_frequency_finds_common_words():
+    data = load_feedback_data("test_data.csv")
+    word_freq = analyse_word_frequency(data)
+
+    # Should find at least some words
+    assert len(word_freq["top_words"]) > 0
+
+
+def test_analyse_word_frequency_finds_actual_words():
+    data = load_feedback_data("test_data.csv")
+    word_freq = analyse_word_frequency(data)
+
+    # Extract just the words (not counts) from the tuples
+    words = [word for word, count in word_freq["top_words"]]
+
+    # test_data.csv contains: "Very satisfied", "Satisfied", "Great course!"
+    # So should find words like "satisfied", "great", or "course"
+    assert any(
+        word in ["satisfied", "great", "course"] for word in [w.lower() for w in words]
+    )
