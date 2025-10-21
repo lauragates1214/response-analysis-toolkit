@@ -10,54 +10,77 @@ This module was developed using AI tools (Claude, VS Code AI) for:
 All architecture and design decisions and final implementations are my own work.
 """
 
-from unittest.mock import patch
 import io
+import pytest
+from unittest.mock import patch
 
-from project import (
-    main,
-    load_feedback_data,
-    calculate_response_metrics,
-    analyse_content_themes,
-)
+from project import main
 
 
-def test_complete_user_workflow():
-    """
-    Sarah is a course coordinator who has collected feedback from students.
-    She has exported the responses as 'test_data.csv' and wants to analyse it.
-
-    She runs the Response Analysis Toolkit from her terminal.
-    The program asks her for the CSV filename.
-    She types 'test_data.csv' and presses enter.
-
-    The program processes her data and displays:
+@pytest.fixture
+def run_analysis():
+    """Fixture that runs the program with test_data.csv
+        The program processes her data and displays:
     - The total number of responses she received
     - The overall sentiment (how positive the feedback was), with descriptive text
     - How subjective vs objective the responses were, with descriptive text
-    - Response length statistics (average, min, max)
+    - Response length statistics (average, min, max)"""
 
-    She can now see meaningful insights from her feedback data.
-    """
+    def _run():
+        with patch("builtins.input", return_value="test_data.csv"):
+            with patch("sys.stdout", new=io.StringIO()) as fake_output:
+                main()
+                return fake_output.getvalue()
 
-    # Sarah runs the program and enters her filename
-    with patch("builtins.input", return_value="test_data.csv"):
-        with patch("sys.stdout", new=io.StringIO()) as fake_output:
-            main()
-            output = fake_output.getvalue()
+    return _run
 
-            # She sees the analysis results displayed
-            assert "Analysis Results" in output
-            assert "Total Responses: 3" in output
-            assert "Sentiment Polarity" in output
-            assert "Sentiment Subjectivity" in output
 
-            # The sentiment scores are visible
-            assert "0.7" in output  # Approximate polarity score
-            assert "0.9" in output  # Approximate subjectivity score
-            assert "Positive" in output  # Descriptive text for polarity
-            assert "Subjective" in output  # Descriptive text for subjectivity
+"""
+Aya, a course instructor who has collected student feedback, runs the program
+and enters her filename.
+The program processes her data and returns analysis results:
+She can now see meaningful insights from her feedback data.
+"""
 
-            # She sees response length analysis
-            assert "Average Response Length" in output
-            assert "Shortest Response" in output
-            assert "Longest Response" in output
+
+def test_analysis_results_printed(run_analysis):
+    # Aya runs the program and enters her filename
+    output = run_analysis()
+
+    # She sees 'Analysis Results' displayed
+    assert "Analysis Results" in output
+
+
+def test_total_responses_printed(run_analysis):
+    # Aya runs the program and enters her filename
+    output = run_analysis()
+
+    # She sees total responses
+    assert "Total Responses: 3" in output
+
+
+def test_sentiment_analysis_printed(run_analysis):
+    # Aya runs the program and enters her filename
+    output = run_analysis()
+
+    # She sees the sentiment analysis
+    assert "Sentiment Polarity" in output
+    assert "Sentiment Subjectivity" in output
+
+    # The sentiment scores are visible
+    assert "0.7" in output  # Approximate polarity score
+    assert "0.9" in output  # Approximate subjectivity score
+
+    # There is descriptive text for each of the scores
+    assert "Positive" in output  # Descriptive text for polarity
+    assert "Subjective" in output  # Descriptive text for subjectivity
+
+
+def test_response_length_analysis_printed(run_analysis):
+    # Aya runs the program and enters her filename
+    output = run_analysis()
+
+    # She sees the response length analysis
+    assert "Average Response Length" in output
+    assert "Shortest Response" in output
+    assert "Longest Response" in output

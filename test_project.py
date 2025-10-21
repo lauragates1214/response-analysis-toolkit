@@ -12,12 +12,14 @@ All architecture and design decisions and final implementations are my own work.
 
 from project import (
     load_feedback_data,
-    calculate_response_metrics,
-    analyse_content_themes,
+    calculate_total_responses,
+    analyse_sentiment,
+    get_sentiment_descriptors,
     analyse_response_lengths,
 )
 
 
+### Load feedback data tests ###
 def test_load_feedback_data_returns_data():
     data = load_feedback_data("test_data.csv")
     assert data is not None
@@ -28,58 +30,107 @@ def test_load_feedback_data_has_rows():
     assert len(data) > 0
 
 
-def test_calculate_response_metrics_returns_dict():
+### Calculate total responses tests ###
+def test_calculate_total_responses_returns_dict():
     data = load_feedback_data("test_data.csv")
-    metrics = calculate_response_metrics(data)
+    metrics = calculate_total_responses(data)
 
     assert isinstance(metrics, dict)
     assert "total_responses" in metrics
 
 
-def test_calculate_response_metrics_counts_correctly():
+def test_calculate_total_responses_counts_correctly():
     data = load_feedback_data("test_data.csv")
-    metrics = calculate_response_metrics(data)
+    metrics = calculate_total_responses(data)
 
     assert metrics["total_responses"] == 3
 
 
-def test_analyse_content_themes_returns_dict():
+### Sentiment analysis tests ###
+def test_analyse_sentiment_returns_dict():
     data = load_feedback_data("test_data.csv")
-    themes = analyse_content_themes(data)
+    themes = analyse_sentiment(data)
 
     assert isinstance(themes, dict)
 
 
-def test_analyse_content_themes_sentiment_polarity_exists():
+def test_analyse_sentiment_sentiment_polarity_exists():
     data = load_feedback_data("test_data.csv")
-    themes = analyse_content_themes(data)
+    themes = analyse_sentiment(data)
 
     assert "sentiment_polarity" in themes
     assert themes["sentiment_polarity"] is not None
 
 
-def test_analyse_content_themes_sentiment_polarity_is_numeric():
+def test_analyse_sentiment_sentiment_polarity_is_numeric():
     data = load_feedback_data("test_data.csv")
-    themes = analyse_content_themes(data)
+    themes = analyse_sentiment(data)
 
     assert isinstance(themes["sentiment_polarity"], (int, float))
 
 
-def test_analyse_content_themes_sentiment_subjectivity_exists():
+def test_analyse_sentiment_sentiment_subjectivity_exists():
     data = load_feedback_data("test_data.csv")
-    themes = analyse_content_themes(data)
+    themes = analyse_sentiment(data)
 
     assert "sentiment_subjectivity" in themes
     assert themes["sentiment_subjectivity"] is not None
 
 
-def test_analyse_content_themes_sentiment_subjectivity_is_numeric():
+def test_analyse_sentiment_sentiment_subjectivity_is_numeric():
     data = load_feedback_data("test_data.csv")
-    themes = analyse_content_themes(data)
+    themes = analyse_sentiment(data)
 
     assert isinstance(themes["sentiment_subjectivity"], (int, float))
 
 
+### Sentiment descriptors tests ###
+def test_get_sentiment_descriptors_very_negative():
+    result = get_sentiment_descriptors(-0.8, 0.5)
+    assert result["polarity_descriptor"] == "Very Negative"
+
+
+def test_get_sentiment_descriptors_negative():
+    result = get_sentiment_descriptors(-0.3, 0.5)
+    assert result["polarity_descriptor"] == "Negative"
+
+
+def test_get_sentiment_descriptors_neutral():
+    result = get_sentiment_descriptors(0.0, 0.5)
+    assert result["polarity_descriptor"] == "Neutral"
+
+
+def test_get_sentiment_descriptors_positive():
+    result = get_sentiment_descriptors(0.3, 0.5)
+    assert result["polarity_descriptor"] == "Positive"
+
+
+def test_get_sentiment_descriptors_very_positive():
+    result = get_sentiment_descriptors(0.7, 0.5)
+    assert result["polarity_descriptor"] == "Very Positive"
+
+
+def test_get_sentiment_descriptors_highly_objective():
+    result = get_sentiment_descriptors(0.0, 0.2)
+    assert result["subjectivity_descriptor"] == "Highly Objective"
+
+
+def test_get_sentiment_descriptors_objective():
+    result = get_sentiment_descriptors(0.0, 0.4)
+    assert result["subjectivity_descriptor"] == "Somewhat Objective"
+
+
+def test_get_sentiment_descriptors_subjective():
+    result = get_sentiment_descriptors(0.0, 0.6)
+    assert result["subjectivity_descriptor"] == "Somewhat Subjective"
+
+
+def test_get_sentiment_descriptors_highly_subjective():
+    result = get_sentiment_descriptors(0.0, 0.8)
+    assert result["subjectivity_descriptor"] == "Highly Subjective"
+
+
+### Response length analysis tests ###
 def test_analyse_response_lengths_returns_dict():
     data = load_feedback_data("test_data.csv")
     length_analysis = analyse_response_lengths(data)

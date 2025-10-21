@@ -13,24 +13,28 @@ from textblob import TextBlob
 def main():
     filename = input("Please enter the survey data CSV filename: ")
     data = load_feedback_data(filename)
-    metrics = calculate_response_metrics(data)
-    themes = analyse_content_themes(data)
+    total = calculate_total_responses(data)
+    sentiment = analyse_sentiment(data)
     descriptors = get_sentiment_descriptors(
-        themes["sentiment_polarity"], themes["sentiment_subjectivity"]
+        sentiment["sentiment_polarity"], sentiment["sentiment_subjectivity"]
     )
+    lengths = analyse_response_lengths(data)
 
     print("Analysis Results:")
-    print("Total Responses:", metrics["total_responses"])
+    print("Total Responses:", total["total_responses"])
     print(
         "Sentiment Polarity:",
         descriptors["polarity_descriptor"],
-        "(" + str(themes["sentiment_polarity"]) + ")",
+        "(" + str(sentiment["sentiment_polarity"]) + ")",
     )
     print(
         "Sentiment Subjectivity:",
         descriptors["subjectivity_descriptor"],
-        "(" + str(themes["sentiment_subjectivity"]) + ")",
+        "(" + str(sentiment["sentiment_subjectivity"]) + ")",
     )
+    print("Average Response Length:", lengths["average_length"])
+    print("Shortest Response:", lengths["min_length"])
+    print("Longest Response:", lengths["max_length"])
 
 
 def load_feedback_data(filename):
@@ -38,11 +42,11 @@ def load_feedback_data(filename):
     return csv_data
 
 
-def calculate_response_metrics(data):
+def calculate_total_responses(data):
     return {"total_responses": len(data)}
 
 
-def analyse_content_themes(data):
+def analyse_sentiment(data):
     text = " ".join(data["response"].astype(str).tolist())
     blob = TextBlob(text)
     polarity = blob.sentiment.polarity
